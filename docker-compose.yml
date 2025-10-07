@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: taskmanager-db
+    restart: always
+    environment:
+      POSTGRES_USER: shanon
+      POSTGRES_PASSWORD: passgres
+      POSTGRES_DB: trellodb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: taskmanager-app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/trellodb
+      SPRING_DATASOURCE_USERNAME: shanon
+      SPRING_DATASOURCE_PASSWORD: passgres
+    depends_on:
+      - db
